@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Day Counter</title>
+
+<style>
+    html, body {
+        margin: 0;
+        width: 100%;
+        height: 100%;
+        background: #fff;
+        overflow: hidden;
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+                     Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    #container {
+        width: 100vw;
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 4vw;
+        box-sizing: border-box;
+    }
+
+    #text {
+        text-align: center;
+        font-weight: 700;
+        line-height: 1.05;
+        word-break: break-word;
+    }
+</style>
+</head>
+<body>
+
+<div id="container">
+    <div id="text"></div>
+</div>
+
+<script>
+// Change this to your campaign start date (YYYY-MM-DD)
+const startDate = new Date("2026-09-09T00:00:00");
+
+function getDayNumber() {
+    const now = new Date();
+
+    // Ignore time of day
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const start = new Date(
+        startDate.getFullYear(),
+        startDate.getMonth(),
+        startDate.getDate()
+    );
+
+    const diffDays = Math.floor((today - start) / 86400000);
+
+    // Day 1 on the start date
+    return diffDays + 1;
+}
+
+const text = document.getElementById("text");
+
+function updateText() {
+    text.textContent =
+        `Day ${getDayNumber()} of asking for Skoog to be made open source`;
+}
+
+function fitText() {
+    const container = document.getElementById("container");
+
+    let low = 8;
+    let high = 1000;
+    let best = low;
+
+    while (low <= high) {
+        const mid = Math.floor((low + high) / 2);
+        text.style.fontSize = mid + "px";
+
+        if (
+            text.scrollWidth <= container.clientWidth &&
+            text.scrollHeight <= container.clientHeight
+        ) {
+            best = mid;
+            low = mid + 1;
+        } else {
+            high = mid - 1;
+        }
+    }
+
+    text.style.fontSize = best + "px";
+}
+
+function render() {
+    updateText();
+    fitText();
+}
+
+render();
+window.addEventListener("resize", fitText);
+</script>
+
+</body>
+</html>
